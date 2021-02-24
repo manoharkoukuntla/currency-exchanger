@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.4.3'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'jacoco'
 }
 
 group = 'com.nosto'
@@ -29,10 +30,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation 'org.springdoc:springdoc-openapi-ui:1.5.4'
-	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok:1.18.18'
+	annotationProcessor 'org.projectlombok:lombok:1.18.18'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'com.github.fppt:jedis-mock:0.1.16'
+	testImplementation 'it.ozimov:embedded-redis:0.7.2'
+	testCompileOnly 'org.projectlombok:lombok:1.18.18'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.18'
 }
 
 dependencyManagement {
@@ -41,6 +45,15 @@ dependencyManagement {
 	}
 }
 
+jacoco {
+	toolVersion = "0.8.5"
+}
+
 test {
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test
 }

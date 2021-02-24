@@ -6,6 +6,7 @@ import com.nosto.exchanger.payloads.response.CurrencyExchangeResponse;
 import com.nosto.exchanger.services.CurrencyExchangeService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,8 +23,10 @@ public class ExchangeRatesController extends BaseController {
 
     @GetMapping("/convert")
     @Operation(summary = "Converts given source currency to target currency")
-    public CurrencyExchangeResponse getExchangeRates(@Valid CurrencyExchangeRequest request) {
+    public ResponseEntity<CurrencyExchangeResponse> getExchangeRates(@Valid CurrencyExchangeRequest request) {
         ExchangeRatesResponse exchangeRatesResponse = currencyExchangeService.getExchangeRates();
-        return currencyExchangeService.getExchangeValue(request, exchangeRatesResponse);
+        CurrencyExchangeResponse response = currencyExchangeService.getExchangeValue(request, exchangeRatesResponse);
+
+        return ResponseEntity.ok(response);
     }
 }

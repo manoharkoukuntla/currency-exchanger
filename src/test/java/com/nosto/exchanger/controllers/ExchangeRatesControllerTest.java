@@ -12,6 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.HashMap;
+
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,16 +29,22 @@ public class ExchangeRatesControllerTest {
     @MockBean
     private CurrencyExchangeService currencyExchangeService;
 
-    private String source = "INR";
-    private String target = "EUR";
+    private String base = "EUR";
+    private String source = base;
+    private String target = "INR";
     private Float sourceValue = 200F;
-    private Float targetValue = 1.5F;
-    private ExchangeRatesResponse exchangeRates = new ExchangeRatesResponse();
-    private CurrencyExchangeRequest request = new CurrencyExchangeRequest();
-    private CurrencyExchangeResponse response = new CurrencyExchangeResponse();
+    private Float targetRate = 0.2F;
+    private Float targetValue = sourceValue * targetRate;
+    private ExchangeRatesResponse exchangeRates;
+    private CurrencyExchangeRequest request;
+    private CurrencyExchangeResponse response;
 
     @BeforeEach
     public void setUpRequestAndResponse() {
+        exchangeRates = new ExchangeRatesResponse();
+        request = new CurrencyExchangeRequest();
+        response = new CurrencyExchangeResponse();
+
         request.setSource(source);
         request.setTarget(target);
         request.setValue(sourceValue);
@@ -44,6 +52,12 @@ public class ExchangeRatesControllerTest {
         response.setTarget(target);
         response.setSourceValue(sourceValue);
         response.setTargetValue(targetValue);
+
+        HashMap<String, Float> rates = new HashMap<>();
+        rates.put(target, targetRate);
+        rates.put(base, 1F);
+        exchangeRates.setBase(source);
+        exchangeRates.setRates(rates);
     }
 
     @Test
