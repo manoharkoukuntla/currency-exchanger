@@ -20,10 +20,10 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ENV=test ./gradlew -Dspring.profiles.active=test build
-#  test:
-#    needs: build
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#    - name: Test with Gradle
-#      run: ENV=test ./gradlew -Dspring.profiles.active=test test
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Test with Gradle
+      run: ENV=test ./gradlew -Dspring.profiles.active=test test
