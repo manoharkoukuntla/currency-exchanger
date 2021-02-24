@@ -1,7 +1,7 @@
 package com.nosto.exchanger.config;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
@@ -12,6 +12,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactor
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+@Slf4j
 @Configuration
 @EnableScheduling
 public class CacheConfig {
@@ -31,5 +32,7 @@ public class CacheConfig {
 
     @CacheEvict(allEntries = true, value = {EXCHANGE_RATES})
     @Scheduled(fixedDelay = 60 * 60 * 1000)
-    public void clearExchangeRates() {}
+    public void clearExchangeRates() {
+        log.info("cleared cache for exchange rates");
+    }
 }
