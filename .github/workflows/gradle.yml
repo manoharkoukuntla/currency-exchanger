@@ -25,5 +25,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Test with Gradle
+      - uses: actions/checkout@v2
+      - name: Test with Gradle
       run: ENV=test ./gradlew -Dspring.profiles.active=test test
