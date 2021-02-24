@@ -5,7 +5,7 @@
  * Redis
  
  # Commands
-   ###For testing
+   ### For testing
  ```$xslt
  ENV=test ./gradlew test
 ```

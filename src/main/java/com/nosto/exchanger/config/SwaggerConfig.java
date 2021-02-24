@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
                 title = "Currency exchange converter API",
                 version = "v1",
                 description = "This app provides REST APIs for converting currencies. " +
-                        "App uses <a>https://api.exchangeratesapi.io</a> as source of exchange values.",
+                        "App uses <a href='https://api.exchangeratesapi.io/latest'>https://api.exchangeratesapi.io</a> as source of exchange values.",
                 contact = @Contact(
                         name = "Manohar",
                         email = "manoharkoukuntla3@gmail.com"

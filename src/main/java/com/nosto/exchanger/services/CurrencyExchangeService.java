@@ -7,6 +7,7 @@ import com.nosto.exchanger.feign.payloads.responses.ExchangeRatesResponse;
 import com.nosto.exchanger.payloads.request.CurrencyExchangeRequest;
 import com.nosto.exchanger.payloads.response.CurrencyExchangeResponse;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 
 import static com.nosto.exchanger.config.CacheConfig.EXCHANGE_RATES;
 
+@Slf4j
 @Service
 public class CurrencyExchangeService {
 
@@ -23,6 +25,7 @@ public class CurrencyExchangeService {
 
     @Cacheable(value = EXCHANGE_RATES, key="'response'", unless = "#result.getRates().size() == 0")
     public ExchangeRatesResponse getExchangeRates() {
+        log.info("getting exchange rates");
         ExchangeRatesResponse exchangeRates = exchangeRatesFeignClient.getExchangeRates();
         if(exchangeRates.getRates().size() > 0)exchangeRates.getRates().put(exchangeRates.getBase(), 1.0F);
         return exchangeRates;
