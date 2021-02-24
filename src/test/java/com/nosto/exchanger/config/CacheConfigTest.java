@@ -1,13 +1,8 @@
 package com.nosto.exchanger.config;
 
 
-import com.nosto.exchanger.feign.ExchangeRatesFeignClient;
-import com.nosto.exchanger.feign.payloads.responses.ExchangeRatesResponse;
-import com.nosto.exchanger.services.CurrencyExchangeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -18,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 
-@SpringBootTest(classes = {TestRedisConnection.class})
+@SpringBootTest(classes = {MockRedisServer.class})
 public class CacheConfigTest {
 
     @Autowired

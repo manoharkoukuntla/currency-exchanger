@@ -1,7 +1,7 @@
 package com.nosto.exchanger.services;
 
 
-import com.nosto.exchanger.config.TestRedisConnection;
+import com.nosto.exchanger.config.MockRedisServer;
 import com.nosto.exchanger.feign.ExchangeRatesFeignClient;
 import com.nosto.exchanger.feign.payloads.responses.ExchangeRatesResponse;
 import com.nosto.exchanger.payloads.request.CurrencyExchangeRequest;
@@ -15,10 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
 
 
-@SpringBootTest(classes = {TestRedisConnection.class})
+@SpringBootTest(classes = {MockRedisServer.class})
 public class CurrencyExchangeServiceTest {
 
     @Mock
@@ -33,12 +34,15 @@ public class CurrencyExchangeServiceTest {
     private Float sourceValue = 200F;
     private Float targetRate = 0.2F;
     private Float targetValue = sourceValue * targetRate;
-    private ExchangeRatesResponse exchangeRates = new ExchangeRatesResponse();
-    private CurrencyExchangeRequest request = new CurrencyExchangeRequest();
-    private CurrencyExchangeResponse response = new CurrencyExchangeResponse();
+    private ExchangeRatesResponse exchangeRates;
+    private CurrencyExchangeRequest request;
+    private CurrencyExchangeResponse response;
 
     @BeforeEach
     public void setUpRequestAndResponse() {
+        request = new CurrencyExchangeRequest();
+        response = new CurrencyExchangeResponse();
+        exchangeRates = new ExchangeRatesResponse();
         request.setSource(source);
         request.setTarget(target);
         request.setValue(sourceValue);
@@ -55,7 +59,17 @@ public class CurrencyExchangeServiceTest {
     }
 
     @Test
-    public void should_return_exchange_rates_when_getExchangeRates_is_called() {
+    public void should_add_base_and_return_exchange_rates_when_getExchangeRates_is_called() {
+        when(exchangeRatesFeignClient.getExchangeRates()).thenReturn(exchangeRates);
+
+        ExchangeRatesResponse exchangeRatesResponse = currencyExchangeService.getExchangeRates();
+
+        assertEquals(exchangeRates, exchangeRatesResponse);
+    }
+
+    @Test
+    public void should_return_exchange_rates_with_out_base_when_getExchangeRates_is_called() {
+        exchangeRates.setRates(new HashMap<>());
         when(exchangeRatesFeignClient.getExchangeRates()).thenReturn(exchangeRates);
 
         ExchangeRatesResponse exchangeRatesResponse = currencyExchangeService.getExchangeRates();
@@ -69,6 +83,43 @@ public class CurrencyExchangeServiceTest {
 
         CurrencyExchangeResponse exchangeRateResponse = currencyExchangeService.getExchangeValue(request, exchangeRates);
 
-        assertEquals(response, exchangeRateResponse);
+        assertEquals(response.getTargetValue(), exchangeRateResponse.getTargetValue());
+    }
+
+    @Test
+    public void should_throw_CurrencyExchangeException_when_exchange_is_not_found() {
+        request.setSource("DUMMY");
+        request.setTarget("DUMMY");
+        when(exchangeRatesFeignClient.getExchangeRates()).thenReturn(exchangeRates);
+
+        try {
+           currencyExchangeService.getExchangeValue(request, exchangeRates);
+        }catch(Exception e){
+            assertNotNull(e);
+        }
+    }
+
+    @Test
+    public void should_throw_CurrencyExchangeException_when_source_exchange_is_not_found() throws Exception {
+        request.setSource("DUMMY");
+        when(exchangeRatesFeignClient.getExchangeRates()).thenReturn(exchangeRates);
+
+        try {
+            currencyExchangeService.getExchangeValue(request, exchangeRates);
+        }catch(Exception e){
+            assertNotNull(e);
+        }
+    }
+
+    @Test
+    public void should_throw_CurrencyExchangeException_when_target_exchange_is_not_found() throws Exception {
+        request.setTarget("DUMMY");
+        when(exchangeRatesFeignClient.getExchangeRates()).thenReturn(exchangeRates);
+
+        try {
+            currencyExchangeService.getExchangeValue(request, exchangeRates);
+        }catch(Exception e){
+            assertNotNull(e);
+        }
     }
 }

@@ -59,8 +59,8 @@ public class ExceptionController {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoHandlerFoundException.class)
-    public ResponseEntity<Object> handleNotFoundException(
-            Exception ex) {
+    public ResponseEntity<Object> handlerNotFoundException(
+            NoHandlerFoundException ex) {
 
         BaseResponse error = new BaseResponse(false, Arrays.asList("resource not found"));
         return new ResponseEntity(error, HttpStatus.NOT_FOUND);

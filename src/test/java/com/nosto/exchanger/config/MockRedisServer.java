@@ -1,23 +1,19 @@
 package com.nosto.exchanger.config;
 
-import com.github.fppt.jedismock.RedisServer;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.TestConfiguration;
+import redis.embedded.RedisServer;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.io.IOException;
 
 @TestConfiguration
-public class TestRedisConnection {
+public class MockRedisServer {
 
     private final RedisServer redisServer;
 
-    @Value("${spring.redis.port}")
-    private int redisPort;
-
-    public TestRedisConnection() throws IOException {
-        this.redisServer = RedisServer.newRedisServer(redisPort);
+    public MockRedisServer(RedisConfiguration configuration) throws IOException {
+        this.redisServer = new RedisServer(configuration.getPort());
     }
 
     @PostConstruct
