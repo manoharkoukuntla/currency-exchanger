@@ -12,7 +12,6 @@ public class TestRedisConnection {
 
     private final RedisServer redisServer;
 
-
     public TestRedisConnection() throws IOException {
         this.redisServer = RedisServer.newRedisServer();
     }
