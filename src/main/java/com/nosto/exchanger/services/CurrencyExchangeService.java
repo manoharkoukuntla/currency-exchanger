@@ -35,16 +35,19 @@ public class CurrencyExchangeService {
         String source = request.getSource();
         String target = request.getTarget();
 
-        CurrencyExchangeException exception = null;
-        if(!rates.containsKey(source)){
-            exception = new CurrencyExchangeException();
-            exception.addError("Did not found source currency exchange value");
+        if(!rates.containsKey(source) || !rates.containsKey(target)){
+            CurrencyExchangeException exception = new CurrencyExchangeException();
+
+            if(!rates.containsKey(source)){
+                exception.addError("Did not found source currency exchange value");
+            }
+
+            if(!rates.containsKey(target)){
+                exception.addError("Did not found target currency exchange value");
+            }
+            throw exception;
         }
-        if(!rates.containsKey(target)){
-            if(exception == null)exception = new CurrencyExchangeException();
-            exception.addError("Did not found target currency exchange value");
-        }
-        if(exception != null)throw exception;
+
 
         Float convertedValue = convertCurrency(rates.get(source), rates.get(target), request.getValue());
         response.setSource(source);

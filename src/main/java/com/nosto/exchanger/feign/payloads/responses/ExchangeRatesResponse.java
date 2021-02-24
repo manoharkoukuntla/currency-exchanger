@@ -1,15 +1,16 @@
 package com.nosto.exchanger.feign.payloads.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class ExchangeRatesResponse implements Serializable {
     private HashMap<String, Float> rates;
