@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
-import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,20 +16,13 @@ import java.util.Map;
 @Hidden
 @RestController
 @RequestMapping("/error")
-public class ApiErrorController implements ErrorController {
-
-    private static final String ERROR_PATH = "/error";
+public class ApiErrorController extends BaseController {
 
     private ErrorAttributes errorAttributes;
 
     @Autowired
     public ApiErrorController(ErrorAttributes errorAttributes) {
         this.errorAttributes = errorAttributes;
-    }
-
-    @Override
-    public String getErrorPath() {
-        return ERROR_PATH;
     }
 
     @GetMapping
