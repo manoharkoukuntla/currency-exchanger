@@ -12,12 +12,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
@@ -56,5 +55,14 @@ public class ExceptionController {
 
         BaseResponse error = new BaseResponse(false, ex.getErrors());
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<Object> handleNotFoundException(
+            Exception ex) {
+
+        BaseResponse error = new BaseResponse(false, Arrays.asList("resource not found"));
+        return new ResponseEntity(error, HttpStatus.NOT_FOUND);
     }
 }
